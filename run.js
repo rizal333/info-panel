@@ -1,15 +1,24 @@
-const { spawn } = require('child_process')
-const cp = require('child_process')
-const { promisify } = require('util')
-const exec = promisify(cp.exec).bind(cp)
+const { spawn } = require('child_process');
+process.env.TZ = 'Asia/Jakarta';
 
-
+/**
+ * Function to start a command process.
+ * @param {string} cmd - The command to execute.
+ */
 function start(cmd) {
-	return spawn(cmd, [], {
-		stdio: ['inherit', 'inherit', 'inherit', 'ipc']
-	})
+    try {
+        // Spawn the desired command process
+        const childProcess = spawn(cmd, [], {
+            stdio: ['inherit', 'inherit', 'inherit', 'ipc']
+        });
+
+        // Handle errors
+        childProcess.on('error', (error) => {
+            console.error('Error starting process:', error.message);
+        });
+    } catch (error) {
+        console.error('Error:', error.message);
+    }
 }
 
-start('bash')
-
-console.log('Terminal ready to use!')
+start('bash');
